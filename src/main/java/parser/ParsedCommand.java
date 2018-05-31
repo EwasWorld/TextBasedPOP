@@ -5,11 +5,11 @@ import java.util.Optional;
 
 
 public class ParsedCommand {
-    private CommandString commandString;
+    private ValidCommand commandString;
     private String arguments = null;
 
 
-    public ParsedCommand(CommandString commandString, String arguments) {
+    public ParsedCommand(ValidCommand commandString, String arguments) {
         if (commandString.hasArguments() && (arguments == null || arguments.equals(""))) {
             throw new IllegalArgumentException(
                     "Arguments cannot be null for command " + commandString.getCommandString());
@@ -20,12 +20,12 @@ public class ParsedCommand {
     }
 
 
-    public ParsedCommand(CommandString commandString) {
+    public ParsedCommand(ValidCommand commandString) {
         this(commandString, null);
     }
 
 
-    public CommandString getCommandString() {
+    public ValidCommand getCommandString() {
         return commandString;
     }
 

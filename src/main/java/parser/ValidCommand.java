@@ -1,6 +1,6 @@
 package parser;
 
-public class CommandString implements Comparable<CommandString> {
+public class ValidCommand implements Comparable<ValidCommand> {
     private String commandString;
     private Command command;
     private boolean hasArguments;
@@ -9,19 +9,19 @@ public class CommandString implements Comparable<CommandString> {
 
 
     // For test purposes
-    public CommandString(String commandString) {
+    public ValidCommand(String commandString) {
         this.commandString = commandString;
     }
 
 
-    public CommandString(String commandString, Command command, boolean hasArguments) {
+    public ValidCommand(String commandString, Command command, boolean hasArguments) {
         this.commandString = commandString;
         this.command = command;
         this.hasArguments = hasArguments;
     }
 
 
-    public int compareTo(CommandString cs) {
+    public int compareTo(ValidCommand cs) {
         return commandString.compareTo(cs.commandString);
     }
 

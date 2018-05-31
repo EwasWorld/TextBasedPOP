@@ -10,7 +10,7 @@ import java.util.*;
 public class CommandBTreeNode {
     private CommandBTreeNode left = null;
     private CommandBTreeNode right = null;
-    private CommandString data;
+    private ValidCommand data;
 
 
     public CommandBTreeNode() {
@@ -21,7 +21,7 @@ public class CommandBTreeNode {
             throw new IllegalStateException("Fatal error: cannot generate commands list");
         }
 
-        final List<CommandString> allCommands = new ArrayList<>();
+        final List<ValidCommand> allCommands = new ArrayList<>();
         while (scanner.hasNext()) {
             final String line = scanner.nextLine();
             final String[] splitLine = line.split(",");
@@ -31,10 +31,10 @@ public class CommandBTreeNode {
 
             final Command command = Command.valueOf(splitLine[0].toUpperCase());
             final boolean hasArguments = Boolean.parseBoolean(splitLine[1]);
-            allCommands.add(new CommandString(splitLine[0].toLowerCase(), command, hasArguments));
+            allCommands.add(new ValidCommand(splitLine[0].toLowerCase(), command, hasArguments));
             if (splitLine.length == 3) {
                 for (String commandStr : splitLine[2].split(";")) {
-                    allCommands.add(new CommandString(commandStr, command, hasArguments));
+                    allCommands.add(new ValidCommand(commandStr, command, hasArguments));
                 }
             }
         }
@@ -42,12 +42,12 @@ public class CommandBTreeNode {
         if (allCommands.size() == 0) {
             throw new IllegalStateException("Fatal error: no commands loaded");
         }
-        init(allCommands.toArray(new CommandString[allCommands.size()]));
+        init(allCommands.toArray(new ValidCommand[allCommands.size()]));
     }
 
 
     // TODO: for testing
-    public CommandBTreeNode(CommandString[] allCommands) {
+    public CommandBTreeNode(ValidCommand[] allCommands) {
         if (allCommands.length == 0) {
             throw new IllegalArgumentException("Array must contain at least one item");
         }
@@ -56,7 +56,7 @@ public class CommandBTreeNode {
     }
 
 
-    private void init(CommandString[] allCommands) {
+    private void init(ValidCommand[] allCommands) {
         Arrays.sort(allCommands);
 
         // If uneven sides, left will be 1 level deeper
@@ -64,13 +64,13 @@ public class CommandBTreeNode {
         data = allCommands[centreIndex];
 
         if (allCommands.length > 1) {
-            final CommandString[] leftArray = new CommandString[centreIndex];
+            final ValidCommand[] leftArray = new ValidCommand[centreIndex];
             System.arraycopy(allCommands, 0, leftArray, 0, centreIndex);
             left = new CommandBTreeNode(leftArray);
 
             final int rightArrayLength = allCommands.length - centreIndex - 1;
             if (rightArrayLength > 0) {
-                final CommandString[] rightArray = new CommandString[rightArrayLength];
+                final ValidCommand[] rightArray = new ValidCommand[rightArrayLength];
                 System.arraycopy(allCommands, centreIndex + 1, rightArray, 0, rightArrayLength);
                 right = new CommandBTreeNode(rightArray);
             }
