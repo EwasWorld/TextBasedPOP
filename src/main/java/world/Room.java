@@ -38,6 +38,9 @@ public class Room {
 
 
     public Room move(Direction direction) {
+        if (!exits.keySet().contains(direction)) {
+            throw new IllegalArgumentException("There's no exit that way");
+        }
         return exits.get(direction);
     }
 

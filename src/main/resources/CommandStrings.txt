@@ -1,0 +1,15 @@
+MOVE,true,walk;go
+NORTH,false,n
+SOUTH,false,s
+EAST,false,e
+WEST,false,w
+INVENTORY,false,i
+LOCATION,false,l;look
+EXAMINE,true,x;look at;read
+TOUCH,true,caress
+TAKE,true,take;grab;pick up
+DROP,true
+YELL,false
+SAY,true
+SPELLBOOK,false,spell book;s
+CAST,true,c
