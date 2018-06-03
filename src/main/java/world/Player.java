@@ -5,40 +5,42 @@ public class Player {
 
 
 
-    private PlayerClass playerClass;
-    private Room playerLocation;
-    private RoomObjectsSet inventory;
+    private static PlayerClass playerClass;
+    private static Room playerLocation;
+    private static RoomObjectsSet inventory;
 
 
-    public String move(Direction direction) {
+    public static String move(Direction direction) {
         playerLocation = playerLocation.move(direction);
         return playerLocation.getRoomText();
     }
 
 
-    public String getPlayerLocationString() {
+    public static String getPlayerLocationString() {
         return playerLocation.getRoomText();
     }
 
 
-    public String getInventoryString() {
+    public static String getInventoryString() {
         return inventory.toString();
     }
 
 
-    public String take(String objectName) {
+    public static String take(String objectName) {
         final RoomObject roomObject = playerLocation.take(objectName);
         inventory.add(roomObject);
         return roomObject.getTakeText();
     }
 
 
-    public void drop(String objectName) {
-        playerLocation.drop(inventory.remove(objectName));
+    public static String drop(String objectName) {
+        final RoomObject roomObject = inventory.remove(objectName);
+        playerLocation.drop(roomObject);
+        return roomObject.getDropText();
     }
 
 
-    public String touch(String objectName) {
+    public static String touch(String objectName) {
         try {
             return playerLocation.touchRoomObject(objectName);
         } catch (IllegalArgumentException e) {
@@ -53,7 +55,7 @@ public class Player {
     }
 
 
-    public String examine(String objectName) {
+    public static String examine(String objectName) {
         try {
             return playerLocation.examineRoomObject(objectName);
         } catch (IllegalArgumentException e) {

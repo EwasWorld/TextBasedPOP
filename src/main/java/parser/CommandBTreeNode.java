@@ -13,6 +13,10 @@ public class CommandBTreeNode {
     private ValidCommand data;
 
 
+
+    /*
+        Creates a balanced binary search tree for all commands listed in CommandStrings.txt
+     */
     public CommandBTreeNode() {
         final Scanner scanner;
         try {
@@ -46,7 +50,10 @@ public class CommandBTreeNode {
     }
 
 
-    // TODO: for testing
+    /*
+        Creates a balanced binary search tree for all commands listed in the array
+     */
+    // TEST METHOD
     public CommandBTreeNode(ValidCommand[] allCommands) {
         if (allCommands.length == 0) {
             throw new IllegalArgumentException("Array must contain at least one item");
@@ -56,6 +63,9 @@ public class CommandBTreeNode {
     }
 
 
+    /*
+        Creates a balanced binary search tree for all commands listed in the array
+     */
     private void init(ValidCommand[] allCommands) {
         Arrays.sort(allCommands);
 
@@ -79,6 +89,9 @@ public class CommandBTreeNode {
     }
 
 
+    /*
+        Total nodes in the tree
+     */
     // TODO: Public for low-level testing
     public int size() {
         int total = 1;
@@ -93,17 +106,25 @@ public class CommandBTreeNode {
     }
 
 
+    /*
+        Finds a match for the command at the beginning of the line
+        Checks that an argument is given or omitted as needed
+     */
     // TODO: Public for low-level testing
     public ParsedCommand find(String line) {
         final String commandString = data.getCommandString();
-        final int comparison;
+        int comparison;
 
         // If the line is shorter than the proposed command then move to the left
         if (commandString.length() <= line.length()) {
             comparison = line.substring(0, commandString.length()).compareTo(commandString);
         }
         else {
-            comparison = -1;
+            comparison = line.compareTo(commandString.substring(0, line.length()));
+            // Cannot be a complete match because the line is too short
+            if (comparison == 0) {
+                comparison = -1;
+            }
         }
 
         if (comparison < 0 && left != null) {

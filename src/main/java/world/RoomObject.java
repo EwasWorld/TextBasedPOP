@@ -10,17 +10,19 @@ public class RoomObject {
     private Set<String> alternateNames;
     private String touchText;
     private String takeText;
+    private String dropText;
     private String examineText;
     private boolean readable;
 
 
-    public RoomObject(String name, Set<String> alternateNames, String touchText, String takeText,
+    public RoomObject(String name, Set<String> alternateNames, String touchText, String takeText, String dropText,
                       String examineText, boolean readable)
     {
         this.name = name;
         this.alternateNames = alternateNames;
         this.touchText = touchText;
         this.takeText = takeText;
+        this.dropText = dropText;
         this.examineText = examineText;
         this.readable = readable;
     }
@@ -45,6 +47,11 @@ public class RoomObject {
 
     public String getTakeText() {
         return takeText;
+    }
+
+
+    public String getDropText() {
+        return dropText;
     }
 
 

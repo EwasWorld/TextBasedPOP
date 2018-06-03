@@ -4,11 +4,9 @@ public class ValidCommand implements Comparable<ValidCommand> {
     private String commandString;
     private Command command;
     private boolean hasArguments;
-    // if arguments are required and the user hasn't given them, say this
-    private String badUserArguments;
 
 
-    // For test purposes
+    // TEST METHOD
     public ValidCommand(String commandString) {
         this.commandString = commandString;
     }

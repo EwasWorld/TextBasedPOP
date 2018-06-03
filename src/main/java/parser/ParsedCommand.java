@@ -1,21 +1,19 @@
 package parser;
 
-import java.util.Optional;
-
 
 
 public class ParsedCommand {
-    private ValidCommand commandString;
+    private Command command;
     private String arguments = null;
 
 
-    public ParsedCommand(ValidCommand commandString, String arguments) {
-        if (commandString.hasArguments() && (arguments == null || arguments.equals(""))) {
+    public ParsedCommand(ValidCommand validCommand, String arguments) {
+        if (validCommand.hasArguments() && (arguments == null || arguments.equals(""))) {
             throw new IllegalArgumentException(
-                    "Arguments cannot be null for command " + commandString.getCommandString());
+                    "Arguments cannot be null for command " + validCommand.getCommandString());
         }
 
-        this.commandString = commandString;
+        this.command = validCommand.getCommand();
         this.arguments = arguments;
     }
 
@@ -25,12 +23,12 @@ public class ParsedCommand {
     }
 
 
-    public ValidCommand getCommandString() {
-        return commandString;
+    public Command getCommand() {
+        return command;
     }
 
 
-    public Optional<String> getArguments() {
-        return Optional.of(arguments);
+    public String getArguments() {
+        return arguments;
     }
 }
