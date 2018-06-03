@@ -1,13 +1,28 @@
 package world;
 
 public class Player {
-    enum PlayerClass {WIZARD}
+    public enum PlayerClass {WIZARD}
 
 
 
-    private static PlayerClass playerClass;
+    private static PlayerClass playerClass = null;
     private static Room playerLocation;
-    private static RoomObjectsSet inventory;
+    private static RoomObjectsSet inventory = new RoomObjectsSet();
+
+
+    public static void setPlayerClass(PlayerClass playerClass) {
+        if (Player.playerClass != null) {
+            throw new IllegalStateException("Cannot change player class");
+        }
+
+        Player.playerClass = playerClass;
+    }
+
+
+    public static String setPlayerLocation(Room playerLocation) {
+        Player.playerLocation = playerLocation;
+        return getPlayerLocationString();
+    }
 
 
     public static String move(Direction direction) {
@@ -21,13 +36,18 @@ public class Player {
     }
 
 
+    public static Room getPlayerLocation() {
+        return playerLocation;
+    }
+
+
     public static String getInventoryString() {
         return inventory.toString();
     }
 
 
     public static String take(String objectName) {
-        final RoomObject roomObject = playerLocation.take(objectName);
+        final RoomObject roomObject = playerLocation.removeRoomObject(objectName);
         inventory.add(roomObject);
         return roomObject.getTakeText();
     }
@@ -35,7 +55,7 @@ public class Player {
 
     public static String drop(String objectName) {
         final RoomObject roomObject = inventory.remove(objectName);
-        playerLocation.drop(roomObject);
+        playerLocation.addRoomObject(roomObject);
         return roomObject.getDropText();
     }
 

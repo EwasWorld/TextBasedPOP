@@ -2,13 +2,16 @@ package world;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
 
 public class Room {
     private String name;
-    private HashMap<Direction, Room> exits;
+    private Map<Direction, Room> exits = new HashMap<>();
+    // When true move() is disabled
+    private boolean exitsLocked;
     private RoomObjectsSet roomObjects;
     private String firstEntranceText;
     private String laterEntranceText;
@@ -16,24 +19,21 @@ public class Room {
     private boolean enteredBefore = false;
 
 
-    public Room(String name, HashMap<Direction, Room> exits, RoomObjectsSet roomObjects, String firstEntranceText,
+    public Room(String name, String firstEntranceText,
+                String laterEntranceText)
+    {
+        this(name, false, firstEntranceText, laterEntranceText);
+    }
+
+
+    public Room(String name, boolean exitsLocked, String firstEntranceText,
                 String laterEntranceText)
     {
         this.name = name;
-        this.exits = exits;
-        this.roomObjects = roomObjects;
+        this.exitsLocked = exitsLocked;
+        roomObjects = new RoomObjectsSet();
         this.firstEntranceText = firstEntranceText;
         this.laterEntranceText = laterEntranceText;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    public Set<Direction> getExits() {
-        return exits.keySet();
     }
 
 
@@ -41,33 +41,81 @@ public class Room {
         if (!exits.keySet().contains(direction)) {
             throw new IllegalArgumentException("There's no exit that way");
         }
+        if (exitsLocked) {
+            throw new IllegalArgumentException("You can't go that way");
+        }
+
         return exits.get(direction);
     }
 
 
     public String getRoomText() {
+        String returnString;
         if (!enteredBefore) {
             enteredBefore = true;
-            return firstEntranceText;
+            returnString = name + "\n" + firstEntranceText;
         }
         else {
-            return laterEntranceText;
+            returnString = laterEntranceText;
         }
+
+        if (!exitsLocked) {
+            returnString += "\n" + getExitsString();
+        }
+        return returnString;
     }
 
 
-    public RoomObject take(String objectName) {
+    public String getExitsString() {
+//        if (exits.size() == 0) {
+//            return "";
+//        }
+
+        StringBuilder returnString;
+
+        if (exits.size() == 1) {
+            returnString = new StringBuilder("Exit is ");
+        }
+        else {
+            returnString = new StringBuilder("Exits are ");
+        }
+
+        for (Direction direction : exits.keySet()) {
+            returnString.append(direction.toString().toLowerCase());
+            returnString.append(", ");
+        }
+
+        return returnString.substring(0, returnString.length() - 2);
+    }
+
+
+    public void addBidirectionalExit(Room room, Direction direction) {
+        exits.put(direction, room);
+        room.exits.put(Direction.getOpposite(direction), this);
+    }
+
+
+    public void addSingleDirectionalExit(Room room, Direction direction) {
+        exits.put(direction, room);
+    }
+
+
+    public RoomObject removeRoomObject(String objectName) {
         return roomObjects.remove(objectName);
     }
 
 
-    public void drop(RoomObject roomObject) {
+    public void addRoomObject(RoomObject roomObject) {
         roomObjects.add(roomObject);
     }
 
 
     public String touchRoomObject(String objectName) {
-        return getRoomObject(objectName).getTouchText();
+        RoomObject roomObject = getRoomObject(objectName);
+        if (roomObject.isBreakIfTouched()) {
+            roomObjects.remove(roomObject);
+        }
+        return roomObject.getTouchText();
     }
 
 
@@ -88,5 +136,15 @@ public class Room {
 
     private void personExits(Person person) {
         peopleInRoom.remove(person);
+    }
+
+
+    public boolean contains(String objectName) {
+        return roomObjects.contains(objectName);
+    }
+
+
+    public boolean contains(RoomObject roomObject) {
+        return roomObjects.contains(roomObject);
     }
 }

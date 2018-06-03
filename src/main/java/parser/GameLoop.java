@@ -1,19 +1,21 @@
 package parser;
 
+import GameEngine.StartingTheGame;
 import world.Direction;
 import world.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 
 public class GameLoop {
-    public static final CommandBTreeNode commandBTree = new CommandBTreeNode();
+    private static final CommandBTreeNode commandBTree = new CommandBTreeNode();
     private static Map<Command, CommandAction> executeMap = generateExecuteMap();
+    private static List<Trigger> autoTriggers = new ArrayList<>();
+    private static Set<ConditionalTrigger> conditionalTriggers = new HashSet<>();
 
 
     private GameLoop() {
@@ -21,24 +23,30 @@ public class GameLoop {
 
 
     public static void main(String[] args) {
-        // TODO: Init
+        StartingTheGame.init();
 
+        outer:
         while (true) {
             String line = readStringFromCmd();
-            if (line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("e") || line.equalsIgnoreCase("quit") || line
-                    .equalsIgnoreCase("q"))
-            {
-                System.out.println("Byee");
-                break;
-            }
 
-            System.out.println(parseLine(line));
+            switch (line.toLowerCase()) {
+                case "exit":
+                case "quit":
+                case "q":
+                    System.out.println("Byee");
+                    break outer;
+                case "help":
+                    System.out.println("Commands: \n"
+                                               + "No arguments: n/s/e/w/location/inventory/quit\n"
+                                               + "Arguments: examine/take/drop");
+                    break;
+                default:
+            }
         }
     }
 
 
-    public static String readStringFromCmd()
-    {
+    private static String readStringFromCmd() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String string;
         string = null;
@@ -52,9 +60,29 @@ public class GameLoop {
     }
 
 
-    public static String parseLine(String line) {
-        final ParsedCommand parsedCommand = commandBTree.find(line.toLowerCase());
-        return executeMap.get(parsedCommand.getCommand()).execute(parsedCommand.getArguments());
+    public static void executeLine(String line) {
+        // Command doesn't matter, event will auto-trigger
+        if (autoTriggers.size() > 0) {
+            autoTriggers.remove(0).action();
+            return;
+        }
+
+        String outline;
+        try {
+            final ParsedCommand parsedCommand = commandBTree.find(line.toLowerCase());
+            outline = executeMap.get(parsedCommand.getCommand()).execute(parsedCommand.getArguments());
+        } catch (IllegalArgumentException e) {
+            outline = e.getMessage();
+        }
+        System.out.println(outline);
+
+        // More than one trigger can happen
+        for (ConditionalTrigger conditionalTrigger : conditionalTriggers) {
+            if (conditionalTrigger.condition()) {
+                conditionalTrigger.action();
+                conditionalTriggers.remove(conditionalTrigger);
+            }
+        }
     }
 
 
@@ -85,7 +113,32 @@ public class GameLoop {
     }
 
 
+    public static void addTrigger(Trigger trigger) {
+        if (trigger instanceof ConditionalTrigger) {
+            conditionalTriggers.add((ConditionalTrigger) trigger);
+        }
+        else {
+            autoTriggers.add(trigger);
+        }
+    }
+
+
     interface CommandAction {
         String execute(String args);
+    }
+
+
+
+    public interface Trigger {
+        void action();
+    }
+
+
+
+    public interface ConditionalTrigger extends Trigger {
+        boolean condition();
+
+
+        void action();
     }
 }

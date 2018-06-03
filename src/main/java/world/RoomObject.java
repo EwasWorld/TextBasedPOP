@@ -1,5 +1,7 @@
 package world;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,19 +14,31 @@ public class RoomObject {
     private String takeText;
     private String dropText;
     private String examineText;
-    private boolean readable;
+    private boolean breakIfTouched;
 
 
-    public RoomObject(String name, Set<String> alternateNames, String touchText, String takeText, String dropText,
-                      String examineText, boolean readable)
+    public RoomObject(String name, String[] alternateNames, String touchText, String takeText, String dropText,
+                      String examineText, boolean breakIfTouched)
     {
         this.name = name;
-        this.alternateNames = alternateNames;
+        this.alternateNames = new HashSet<>(Arrays.asList(alternateNames));
         this.touchText = touchText;
         this.takeText = takeText;
         this.dropText = dropText;
         this.examineText = examineText;
-        this.readable = readable;
+        this.breakIfTouched = breakIfTouched;
+    }
+
+
+    public RoomObject(String name, String[] alternateNames, String touchText, String takeText, String dropText,
+                      String examineText)
+    {
+        this(name,alternateNames, touchText, takeText, dropText, examineText, false);
+    }
+
+
+    public RoomObject(String name, String examineText) {
+        this(name, new String[]{}, "", "", "", examineText, false);
     }
 
 
@@ -34,7 +48,10 @@ public class RoomObject {
 
 
     public Set<String> getAllNames() {
-        final Set<String> returnSet = new HashSet<>(alternateNames);
+        final Set<String> returnSet = new HashSet<>();
+        if (alternateNames != null) {
+            returnSet.addAll(alternateNames);
+        }
         returnSet.add(name);
         return returnSet;
     }
@@ -60,11 +77,7 @@ public class RoomObject {
     }
 
 
-    public String read() {
-        String returnString = examineText;
-        if (!readable) {
-            returnString += " There doesn't seem to be anything on here to read.";
-        }
-        return returnString;
+    public boolean isBreakIfTouched() {
+        return breakIfTouched;
     }
 }

@@ -42,8 +42,27 @@ public class RoomObjectsSet {
         return roomObject;
     }
 
+    public void remove(RoomObject roomObject) {
+        roomObjects.remove(roomObject) ;
+    }
+
 
     public void add(RoomObject roomObject) {
         roomObjects.add(roomObject);
+    }
+
+
+    public boolean contains(String objectName) {
+        try {
+            getFromString(objectName);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+
+    public boolean contains(RoomObject roomObject) {
+        return roomObjects.contains(roomObject);
     }
 }
