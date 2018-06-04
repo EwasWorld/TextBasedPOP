@@ -45,6 +45,10 @@ public class StartingTheGame {
                 // Set up the bedroom based upon their class
                 final Room bedroom = createWizardBedroom();
 
+                if (Player.hasObject("blue orb")) {
+                    Player.removeObject("blue orb");
+                }
+
                 GameLoop.addTrigger(() -> System.out.println(
                         "The orb starts to slowly suck your hand in. Your arm up to your elbow is now stuck inside. "
                                 + "The sensation changed to a bitter cold and your fingers begin numb."));
@@ -73,7 +77,7 @@ public class StartingTheGame {
                         + "of the flame's reach. Within the fire is an old book, so old that the pages have all "
                         + "fallen out and are scattered amongst the flames. One page managed to avoid the flame "
                         + "entirely and drifts towards your face, landing gently in front of you.",
-                ""
+                "A small bedroom with a bed, bookcase, stool and fire."
         );
 
         // Spell pages
@@ -113,16 +117,65 @@ public class StartingTheGame {
                                 false
                 ));
 
-        // TODO: Furniture
-        /* Bed
-        * Bookshelf
-        * Anything on the bookshelf
-        * Remember to increase triggers triggers above when adding these */
+        // Furniture
         final RoomObject fire = new RoomObject(
                 "Fire", new String[]{"Pages"}, "It's hot, your finger stings.", generateFireExamineText(bedroom),
                 false
         );
         bedroom.addRoomObject(fire);
+        bedroom.addRoomObject(new RoomObject("Bookshelf", new String[]{},
+                                             "You get some dust on your fingers. Maybe you should do a little spring "
+                                                     + "cleaning.",
+                                             "On this old set of shelves are all the possessions you have: two "
+                                                     + "shirts, two pairs of trousers, a book of *cough* adult nature"
+                                                     + " hidden below a book titled 'Wizarding Runes for Dummies', "
+                                                     + "and a piece of stale bread - you meant to eat it last night "
+                                                     + "but your forgot.",
+                                             false
+        ));
+        bedroom.addRoomObject(new RoomObject("Bed", new String[]{},
+                                             "It screams... just kidding it's a bed, and not a very soft one at that.",
+                                             "Rustled from a poor night's sleep. You're sure you had a pillow but it "
+                                                     + "seems to have gone missing since you went to bed last night",
+                                             false
+        ));
+        bedroom.addRoomObject(new TakableItem("Robes, lifted", new String[]{"Robes lifted", "adult book"},
+                                              "As you caress it you're reminded of the glorious sights within. You've"
+                                                      + " read it so many times that it's burned into your memory.",
+                                              "Best keep it on you in case someone comes snooping around. You don't "
+                                                      + "want to be caught with such a thing, you'd never find a "
+                                                      + "spouse.",
+                                              "You're just going to leave it there and walk away???",
+                                              "A book of female wizards lifting their robes to show their ankles. At "
+                                                      + "the back there's a bonus story written by one of the most "
+                                                      + "famous writers for the Lewd Wizards magazine."
+        ));
+        bedroom.addRoomObject(
+                new TakableItem("Wizarding Runes for Dummies", new String[]{"Wizarding runes book", "Wizarding runes"},
+                                "You creased a page.",
+                                "It's good as reference. Not as good as the Encyclopedia Britannica, but it's much "
+                                        + "more portable and usually does the job.",
+                                "Hardbacks cost an arm and a leg.",
+                                "The very book that inspired you to become a wizard. You've memorised all its "
+                                        + "knowledge, but can't seem to let it go."
+                ));
+        bedroom.addRoomObject(new TakableItem("Shirt", new String[]{"tshirt", "t-shirt", "top"},
+                                              "It's a shirt, you know what those feel like.",
+                                              "I suppose it's useful in case you spill some food on this one.",
+                                              "Oh, you paid good money for that...", "Just a plain white shirt."
+        ));
+        bedroom.addRoomObject(new TakableItem("Trousers", new String[]{"pair of trousers", "pants"},
+                                              "It's a pair of trousers, you know that those feel like.",
+                                              "Your mother always told you it's good to keep a spare pair on you when"
+                                                      + " you leave the house in case you wet yourself.",
+                                              "I mean, they weren't that expensive, but they have sentimental value...",
+                                              ""
+        ));
+        bedroom.addRoomObject(
+                new TakableItem("Stale bread", new String[]{"bread"}, "It's as hard as a rock. Not very apetising.",
+                                "I suppose you can throw it at someone and kill them.", "Probably for the best.",
+                                "By your estimates, it's about a week beyond the eat-by date."
+                ));
 
 
         // First page taken
@@ -145,10 +198,10 @@ public class StartingTheGame {
 
                 // Check that the player took the original page
                 if (room.contains("Talos")) {
-                    return room.roomObjectsSize() == 6;
+                    return room.roomObjectsSize() == 13;
                 }
                 else {
-                    return room.roomObjectsSize() == 5;
+                    return room.roomObjectsSize() == 12;
                 }
             }
 
@@ -182,10 +235,10 @@ public class StartingTheGame {
 
                 // Check that the player took the original page
                 if (room.contains("Talos")) {
-                    return room.roomObjectsSize() == 5;
+                    return room.roomObjectsSize() == 12;
                 }
                 else {
-                    return room.roomObjectsSize() == 4;
+                    return room.roomObjectsSize() == 11;
                 }
             }
 

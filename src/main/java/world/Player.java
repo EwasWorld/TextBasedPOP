@@ -88,4 +88,14 @@ public class Player {
             throw new IllegalArgumentException("That object is nowhere to be seen");
         }
     }
+
+
+    public static boolean hasObject(String objectName) {
+        return inventory.contains(objectName);
+    }
+
+
+    public static void removeObject(String objectName) {
+        inventory.remove(objectName);
+    }
 }

@@ -62,7 +62,7 @@ public class Room {
             returnString = name + "\n" + firstEntranceText;
         }
         else {
-            returnString = laterEntranceText;
+            returnString = name + "\n" + laterEntranceText;
         }
 
         if (!exitsLocked) {
@@ -73,9 +73,9 @@ public class Room {
 
 
     public String getExitsString() {
-//        if (exits.size() == 0) {
-//            return "";
-//        }
+        if (exits.size() == 0) {
+            return "";
+        }
 
         StringBuilder returnString;
 
