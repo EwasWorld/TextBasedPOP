@@ -7,18 +7,18 @@ public class TakableItem extends RoomObject {
 
 
     public TakableItem(String name, String[] alternateNames, String touchText, String takeText, String dropText,
+                       String examineText)
+    {
+        this(name, alternateNames, touchText, takeText, dropText, examineText, false);
+    }
+
+
+    public TakableItem(String name, String[] alternateNames, String touchText, String takeText, String dropText,
                        String examineText, boolean breakIfTouched)
     {
         super(name, alternateNames, touchText, examineText, breakIfTouched);
         this.takeText = takeText;
         this.dropText = dropText;
-    }
-
-
-    public TakableItem(String name, String[] alternateNames, String touchText, String takeText, String dropText,
-                       String examineText)
-    {
-        this(name, alternateNames, touchText, takeText, dropText, examineText, false);
     }
 
 

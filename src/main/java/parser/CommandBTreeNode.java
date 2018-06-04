@@ -2,7 +2,10 @@ package parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 
 
@@ -10,7 +13,6 @@ public class CommandBTreeNode {
     private CommandBTreeNode left = null;
     private CommandBTreeNode right = null;
     private ValidCommand data;
-
 
 
     /*
@@ -51,19 +53,6 @@ public class CommandBTreeNode {
 
     /*
         Creates a balanced binary search tree for all commands listed in the array
-        - Used for testing -
-     */
-    private CommandBTreeNode(ValidCommand[] allCommands) {
-        if (allCommands.length == 0) {
-            throw new IllegalArgumentException("Array must contain at least one item");
-        }
-
-        init(allCommands);
-    }
-
-
-    /*
-        Creates a balanced binary search tree for all commands listed in the array
      */
     private void init(ValidCommand[] allCommands) {
         Arrays.sort(allCommands);
@@ -84,7 +73,19 @@ public class CommandBTreeNode {
                 right = new CommandBTreeNode(rightArray);
             }
         }
+    }
 
+
+    /*
+        Creates a balanced binary search tree for all commands listed in the array
+        - Used for testing -
+     */
+    private CommandBTreeNode(ValidCommand[] allCommands) {
+        if (allCommands.length == 0) {
+            throw new IllegalArgumentException("Array must contain at least one item");
+        }
+
+        init(allCommands);
     }
 
 

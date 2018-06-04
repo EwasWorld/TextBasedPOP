@@ -3,6 +3,7 @@ package world;
 public enum Direction {
     NORTH, SOUTH, EAST, WEST;
 
+
     static Direction getOpposite(Direction direction) {
         switch (direction) {
             case NORTH:

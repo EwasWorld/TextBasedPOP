@@ -1,10 +1,14 @@
 package parser;
 
 
-
 public class ParsedCommand {
     private Command command;
     private String arguments = null;
+
+
+    public ParsedCommand(ValidCommand commandString) {
+        this(commandString, null);
+    }
 
 
     public ParsedCommand(ValidCommand validCommand, String arguments) {
@@ -15,11 +19,6 @@ public class ParsedCommand {
 
         this.command = validCommand.getCommand();
         this.arguments = arguments;
-    }
-
-
-    public ParsedCommand(ValidCommand commandString) {
-        this(commandString, null);
     }
 
 

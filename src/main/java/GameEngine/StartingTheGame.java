@@ -1,5 +1,6 @@
 package GameEngine;
 
+import applet.MyPanel;
 import parser.Command;
 import parser.GameLoop;
 import parser.ParsedCommand;
@@ -28,7 +29,7 @@ public class StartingTheGame {
                         + "seems like you'd be able to do anything you could fathom if only you had it in your grasp.",
                 true
         ));
-        System.out.println(Player.setPlayerLocation(room));
+        MyPanel.appendLineToTextArea(Player.setPlayerLocation(room));
 
         // Orb chooser and warp player to bedroom
         GameLoop.addTrigger(new GameLoop.ConditionalTrigger() {
@@ -49,17 +50,18 @@ public class StartingTheGame {
                     Player.removeObject("blue orb");
                 }
 
-                GameLoop.addTrigger(() -> System.out.println(
+                GameLoop.addTrigger(() -> MyPanel.appendLineToTextArea(
                         "The orb starts to slowly suck your hand in. Your arm up to your elbow is now stuck inside. "
                                 + "The sensation changed to a bitter cold and your fingers begin numb."));
                 GameLoop.addTrigger(() -> {
-                    System.out.println("You continue to be swallowed by the orb. Just before your face breaches its "
-                                               + "surface you hear a clattering. The harsh cold disappears in an "
-                                               + "instant and your fingers thaw. You feel a gentle warmth on your arm"
-                                               + " and become aware of yourself lying on the floor.");
+                    MyPanel.appendLineToTextArea(
+                            "You continue to be swallowed by the orb. Just before your face breaches its "
+                                    + "surface you hear a clattering. The harsh cold disappears in an "
+                                    + "instant and your fingers thaw. You feel a gentle warmth on your arm"
+                                    + " and become aware of yourself lying on the floor.");
 
                     // Set up the next room based on their class
-                    System.out.println(Player.setPlayerLocation(createOtherRoomsAndObjects(bedroom)));
+                    MyPanel.appendLineToTextArea(Player.setPlayerLocation(createOtherRoomsAndObjects(bedroom)));
                 });
             }
 
@@ -223,7 +225,7 @@ public class StartingTheGame {
             @Override
             public void action() {
                 fire.setExamineText(generateFireExamineText(bedroom));
-                System.out.println(
+                MyPanel.appendLineToTextArea(
                         "The ashes of the pages that were in the centre of the fire begin to crumble as the outer "
                                 + "pages begin to blacken.");
             }
@@ -266,7 +268,7 @@ public class StartingTheGame {
             @Override
             public void action() {
                 fire.setExamineText(generateFireExamineText(bedroom));
-                System.out.println(
+                MyPanel.appendLineToTextArea(
                         "As you grab the barely legible page and gently pat out the flames at its corner, the "
                                 + "remaining pages become completely blackened and are engulfed by the flames.");
 
@@ -290,49 +292,6 @@ public class StartingTheGame {
         });
 
         return bedroom;
-    }
-
-
-    private static String generateFireExamineText(Room bedroom) {
-        final List<String> godsOld = Arrays.asList(
-                "Helm, god of protection", "Ralishaz, god of ill luck and insanity",
-                "Belenus, god of sun, light, and warmth", "Bast, goddess of cats and vengeance",
-                "Balinor, god of beasts and the hunt"
-        );
-        final List<String> gods = new ArrayList<>();
-        for (String god : godsOld) {
-            if (bedroom.contains(god.split(",")[0])) {
-                gods.add(god);
-            }
-        }
-
-        final StringBuilder godsString = new StringBuilder();
-        for (int i = 0; i < gods.size(); i++) {
-            if (i != gods.size() - 1) {
-                godsString.append(gods.get(i));
-                godsString.append(", ");
-            }
-            else {
-                godsString.append("and ");
-                godsString.append(gods.get(i));
-            }
-        }
-
-        if (gods.size() == 5) {
-            return "The pages that fell in the centre are already blackening in the flame's embrace, but the five "
-                    + "pages "
-                    + "that fell towards the edges are taking slower. At a glance you see that the pages within reach"
-                    + " are devoted to "
-                    + godsString.toString() + ". You reckon you can save two pages if you're quick.";
-        }
-        else if (gods.size() == 4) {
-            return "The pages that fell in the centre are burnt beyond all hope, but the four pages that fell towards"
-                    + " the edges are still savable. At a glance you see that the pages within reach are devoted to "
-                    + godsString.toString() + ". You reckon you can save one more page if you're quick.";
-        }
-        else {
-            return "The fire dies down, all the pages gone.";
-        }
     }
 
 
@@ -390,5 +349,48 @@ public class StartingTheGame {
         street.addBidirectionalExit(colosseum, Direction.EAST);
 
         return bedroom;
+    }
+
+
+    private static String generateFireExamineText(Room bedroom) {
+        final List<String> godsOld = Arrays.asList(
+                "Helm, god of protection", "Ralishaz, god of ill luck and insanity",
+                "Belenus, god of sun, light, and warmth", "Bast, goddess of cats and vengeance",
+                "Balinor, god of beasts and the hunt"
+        );
+        final List<String> gods = new ArrayList<>();
+        for (String god : godsOld) {
+            if (bedroom.contains(god.split(",")[0])) {
+                gods.add(god);
+            }
+        }
+
+        final StringBuilder godsString = new StringBuilder();
+        for (int i = 0; i < gods.size(); i++) {
+            if (i != gods.size() - 1) {
+                godsString.append(gods.get(i));
+                godsString.append(", ");
+            }
+            else {
+                godsString.append("and ");
+                godsString.append(gods.get(i));
+            }
+        }
+
+        if (gods.size() == 5) {
+            return "The pages that fell in the centre are already blackening in the flame's embrace, but the five "
+                    + "pages "
+                    + "that fell towards the edges are taking slower. At a glance you see that the pages within reach"
+                    + " are devoted to "
+                    + godsString.toString() + ". You reckon you can save two pages if you're quick.";
+        }
+        else if (gods.size() == 4) {
+            return "The pages that fell in the centre are burnt beyond all hope, but the four pages that fell towards"
+                    + " the edges are still savable. At a glance you see that the pages within reach are devoted to "
+                    + godsString.toString() + ". You reckon you can save one more page if you're quick.";
+        }
+        else {
+            return "The fire dies down, all the pages gone.";
+        }
     }
 }

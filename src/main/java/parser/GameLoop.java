@@ -1,12 +1,9 @@
 package parser;
 
-import GameEngine.StartingTheGame;
+import applet.MyPanel;
 import world.Direction;
 import world.Player;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,56 +19,6 @@ public class GameLoop {
 
 
     private GameLoop() {
-    }
-
-
-    /* NO LONGER UPDATED */
-    public static void main(String[] args) {
-        StartingTheGame.init();
-
-        outer:
-        while (true) {
-            String line = readStringFromCmd();
-
-            switch (line.toLowerCase()) {
-                case "exit":
-                case "quit":
-                case "q":
-                    System.out.println("Byee");
-                    break outer;
-                case "help":
-                case "h":
-                    System.out.println("Basic Commands: \n"
-                                               + "No arguments: n/s/e/w/location/inventory/hint/quit\n"
-                                               + "Arguments: examine/take/drop");
-                    break;
-                case "hint":
-                    if (conditionalTriggers.size() > 0) {
-                        System.out.println(conditionalTriggers.get(0).hint());
-                    }
-                    else {
-                        System.out.println("I got nothin' (I haven't written a hint for her yet, yell at me)");
-                    }
-                    break;
-                default:
-                    executeLine(line);
-                    break;
-            }
-        }
-    }
-
-    /* NO LONGER UPDATED */
-    private static String readStringFromCmd() {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String string;
-        string = null;
-
-        try {
-            string = br.readLine();
-        } catch (IOException ioe) {
-            System.err.println("Fatal input error");
-        }
-        return string;
     }
 
 
@@ -113,13 +60,13 @@ public class GameLoop {
                 }
             }
             else {
-                System.out.println(((BlockingTrigger) conditionalTriggers.get(0)).blockingText());
+                MyPanel.appendLineToTextArea(((BlockingTrigger) conditionalTriggers.get(0)).blockingText());
                 return;
             }
         } catch (IllegalArgumentException e) {
             outline = e.getMessage();
         }
-        System.out.println(outline);
+        MyPanel.appendLineToTextArea(outline);
 
         if (conditionalTriggers.size() > 0 && conditionalTriggers.get(0).condition()) {
             conditionalTriggers.get(0).action();

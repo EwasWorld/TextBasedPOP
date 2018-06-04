@@ -59,7 +59,7 @@ public class Room {
         String returnString;
         if (!enteredBefore) {
             enteredBefore = true;
-            returnString = name + "\n" + firstEntranceText;
+            returnString = "~ " + name + " ~\n" + firstEntranceText;
         }
         else {
             returnString = name + "\n" + laterEntranceText;
@@ -125,16 +125,18 @@ public class Room {
     }
 
 
+    private RoomObject getRoomObject(String objectName) {
+        return roomObjects.getFromString(objectName);
+    }
+
+
     public String examineRoomObject(String objectName) {
         return getRoomObject(objectName).getExamineText();
     }
 
+
     public int roomObjectsSize() {
         return roomObjects.size();
-    }
-
-    private RoomObject getRoomObject(String objectName) {
-        return roomObjects.getFromString(objectName);
     }
 
 
