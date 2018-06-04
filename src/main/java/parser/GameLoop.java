@@ -44,6 +44,15 @@ public class GameLoop {
                                                + "No arguments: n/s/e/w/location/inventory/quit\n"
                                                + "Arguments: examine/take/drop");
                     break;
+                case "hint":
+                    if (conditionalTriggers.size() > 0) {
+                        System.out.println(conditionalTriggers.get(0).hint());
+                    }
+                    else {
+                        // TODO
+                        System.out.println("I got nothin' (I haven't written a hint for her yet, yell at me)");
+                    }
+                    break;
                 default:
                     executeLine(line);
                     break;
@@ -159,6 +168,9 @@ public class GameLoop {
 
     public interface ConditionalTrigger extends Trigger {
         boolean condition();
+
+
+        String hint();
     }
 
 

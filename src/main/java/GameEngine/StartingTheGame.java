@@ -62,6 +62,13 @@ public class StartingTheGame {
                     System.out.println(Player.setPlayerLocation(createOtherRoomsAndObjects(bedroom)));
                 });
             }
+
+
+            @Override
+            public String hint() {
+                // TODO: Pluralise when other orbs are added
+                return "The orb is pretty, don't you just want to have it?";
+            }
         });
     }
 
@@ -85,34 +92,40 @@ public class StartingTheGame {
         final String dropText = "That's a bad idea but hell, what do I know?";
         final String takeText = "You pick up the page.";
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Talos", new String[]{"Talos", "Paper", "Page", "Talos page"}, touchText, takeText,
+                new TakableItem("Prayer to Talos", new String[]{"Talos", "Paper", "Page", "Talos page"}, touchText,
+                                takeText,
                                 dropText,
                                 "'Wind wave' is written at the top of the page in ancient runes. Below is a calling "
                                         + "to Talos, god of storms, asking for his breath.",
                                 false
                 ));
-        bedroom.addRoomObject(new TakableItem("Prayer to Helm", new String[]{"Helm", "helm page"}, touchText, takeText, dropText,
-                                              "A calling to Helm, god of protection, asking for his protection.", false
-        ));
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Ralishaz", new String[]{"Ralishaz", "ralishaz page"}, touchText, takeText, dropText,
+                new TakableItem("Prayer to Helm", new String[]{"Helm", "helm page"}, touchText, takeText, dropText,
+                                "A calling to Helm, god of protection, asking for his protection.", false
+                ));
+        bedroom.addRoomObject(
+                new TakableItem("Prayer to Ralishaz", new String[]{"Ralishaz", "ralishaz page"}, touchText, takeText,
+                                dropText,
                                 "A calling to Ralishaz, god of ill luck and insanity, asking for his fortune to shine "
                                         + "upon those around you.",
                                 false
                 ));
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Belenus", new String[]{"Belenus", "belenus page"}, touchText, takeText, dropText,
+                new TakableItem("Prayer to Belenus", new String[]{"Belenus", "belenus page"}, touchText, takeText,
+                                dropText,
                                 "A calling to Belenus, god of sun, light, and warmth, asking for his "
                                         + "radiance in this dark place.",
                                 false
                 ));
-        bedroom.addRoomObject(new TakableItem("Prayer to Bast", new String[]{"Bast", "bast page"}, touchText, takeText, dropText,
-                                              "A calling to Bast, goddess of cats and vengeance, asking for her "
-                                                      + "strength in the task you have before you.",
-                                              false
-        ));
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Balinor", new String[]{"Balinor", "balinor page"}, touchText, takeText, dropText,
+                new TakableItem("Prayer to Bast", new String[]{"Bast", "bast page"}, touchText, takeText, dropText,
+                                "A calling to Bast, goddess of cats and vengeance, asking for her "
+                                        + "strength in the task you have before you.",
+                                false
+                ));
+        bedroom.addRoomObject(
+                new TakableItem("Prayer to Balinor", new String[]{"Balinor", "balinor page"}, touchText, takeText,
+                                dropText,
                                 "A calling to Balinor, god of beasts and the hunt, asking for a friend.",
                                 false
                 ));
@@ -182,13 +195,14 @@ public class StartingTheGame {
         GameLoop.addTrigger(new GameLoop.BlockingTrigger() {
             @Override
             public boolean acceptableAction(ParsedCommand parsedCommand) {
-                return parsedCommand.getCommand() == Command.TAKE || parsedCommand.getCommand() == Command.EXAMINE;
+                return parsedCommand.getCommand() == Command.TAKE || (parsedCommand.getCommand() == Command.EXAMINE
+                        && parsedCommand.getArguments().equals("fire"));
             }
 
 
             @Override
             public String blockingText() {
-                return "You probably want to do something about the burning pages first, they look important.";
+                return "You probably want to do something about the things in the fire first, they look important.";
             }
 
 
@@ -213,6 +227,12 @@ public class StartingTheGame {
                         "The ashes of the pages that were in the centre of the fire begin to crumble as the outer "
                                 + "pages begin to blacken.");
             }
+
+
+            @Override
+            public String hint() {
+                return "Might want to take a closer look at the fire.";
+            }
         });
 
         // Second page taken
@@ -225,7 +245,7 @@ public class StartingTheGame {
 
             @Override
             public String blockingText() {
-                return "You probably want to do something about the burning pages first, they look important.";
+                return "You probably want to do something about the things in the fire first, they look important.";
             }
 
 
@@ -259,6 +279,13 @@ public class StartingTheGame {
                 }
 
                 Player.getPlayerLocation().setExitsLocked(false);
+            }
+
+
+            @Override
+            public String hint() {
+                return "You only wanted one page from the fire? Be a bit more greedy - anything that's not nailed "
+                        + "down can be yours.";
             }
         });
 
