@@ -1,7 +1,6 @@
 package world;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,34 +10,19 @@ public class RoomObject {
     private String name;
     private Set<String> alternateNames;
     private String touchText;
-    private String takeText;
-    private String dropText;
     private String examineText;
     private boolean breakIfTouched;
+    // TODO: Something to add to the end of a room description
 
 
-    public RoomObject(String name, String[] alternateNames, String touchText, String takeText, String dropText,
-                      String examineText, boolean breakIfTouched)
+    public RoomObject(String name, String[] alternateNames, String touchText, String examineText,
+                      boolean breakIfTouched)
     {
         this.name = name;
         this.alternateNames = new HashSet<>(Arrays.asList(alternateNames));
         this.touchText = touchText;
-        this.takeText = takeText;
-        this.dropText = dropText;
         this.examineText = examineText;
         this.breakIfTouched = breakIfTouched;
-    }
-
-
-    public RoomObject(String name, String[] alternateNames, String touchText, String takeText, String dropText,
-                      String examineText)
-    {
-        this(name,alternateNames, touchText, takeText, dropText, examineText, false);
-    }
-
-
-    public RoomObject(String name, String examineText) {
-        this(name, new String[]{}, "", "", "", examineText, false);
     }
 
 
@@ -62,16 +46,6 @@ public class RoomObject {
     }
 
 
-    public String getTakeText() {
-        return takeText;
-    }
-
-
-    public String getDropText() {
-        return dropText;
-    }
-
-
     public String getTouchText() {
         return touchText;
     }
@@ -79,5 +53,15 @@ public class RoomObject {
 
     public boolean isBreakIfTouched() {
         return breakIfTouched;
+    }
+
+
+    public String getTakeText() {
+        return "You can't take that.";
+    }
+
+
+    public String getDropText() {
+        return "How are you even holding this?";
     }
 }

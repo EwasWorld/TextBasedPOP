@@ -7,7 +7,7 @@ public class Player {
 
     private static PlayerClass playerClass = null;
     private static Room playerLocation;
-    private static RoomObjectsSet inventory = new RoomObjectsSet();
+    private static ItemsSet inventory = new ItemsSet();
 
 
     public static void setPlayerClass(PlayerClass playerClass) {
@@ -47,14 +47,14 @@ public class Player {
 
 
     public static String take(String objectName) {
-        final RoomObject roomObject = playerLocation.removeRoomObject(objectName);
+        final TakableItem roomObject = playerLocation.removeRoomObject(objectName);
         inventory.add(roomObject);
         return roomObject.getTakeText();
     }
 
 
     public static String drop(String objectName) {
-        final RoomObject roomObject = inventory.remove(objectName);
+        final TakableItem roomObject = inventory.remove(objectName);
         playerLocation.addRoomObject(roomObject);
         return roomObject.getDropText();
     }

@@ -12,7 +12,8 @@ public class Room {
     private Map<Direction, Room> exits = new HashMap<>();
     // When true move() is disabled
     private boolean exitsLocked;
-    private RoomObjectsSet roomObjects;
+    // TODO: Prevent two objects in a room having the same name or alternate names
+    private ItemsSet roomObjects;
     private String firstEntranceText;
     private String laterEntranceText;
     private Set<Person> peopleInRoom = new HashSet<>();
@@ -31,9 +32,14 @@ public class Room {
     {
         this.name = name;
         this.exitsLocked = exitsLocked;
-        roomObjects = new RoomObjectsSet();
+        roomObjects = new ItemsSet();
         this.firstEntranceText = firstEntranceText;
         this.laterEntranceText = laterEntranceText;
+    }
+
+
+    public void setExitsLocked(boolean exitsLocked) {
+        this.exitsLocked = exitsLocked;
     }
 
 
@@ -100,7 +106,7 @@ public class Room {
     }
 
 
-    public RoomObject removeRoomObject(String objectName) {
+    public TakableItem removeRoomObject(String objectName) {
         return roomObjects.remove(objectName);
     }
 
@@ -123,6 +129,9 @@ public class Room {
         return getRoomObject(objectName).getExamineText();
     }
 
+    public int roomObjectsSize() {
+        return roomObjects.size();
+    }
 
     private RoomObject getRoomObject(String objectName) {
         return roomObjects.getFromString(objectName);

@@ -5,17 +5,17 @@ import java.util.Set;
 
 
 
-public class RoomObjectsSet {
-    private Set<RoomObject> roomObjects;
+public class ItemsSet {
+    private Set<RoomObject> items;
 
 
-    public RoomObjectsSet() {
-        roomObjects = new HashSet<>();
+    public ItemsSet() {
+        items = new HashSet<>();
     }
 
 
     public RoomObject getFromString(String objectName) {
-        for (RoomObject roomObject : roomObjects) {
+        for (RoomObject roomObject : items) {
             for (String name : roomObject.getAllNames()) {
                 if (objectName.equalsIgnoreCase(name)) {
                     return roomObject;
@@ -28,7 +28,7 @@ public class RoomObjectsSet {
 
     public String toString() {
         StringBuilder sb = new StringBuilder("Inventory: ");
-        for (RoomObject roomObject : roomObjects) {
+        for (RoomObject roomObject : items) {
             sb.append(roomObject.getName());
             sb.append(", ");
         }
@@ -36,19 +36,27 @@ public class RoomObjectsSet {
         return sb.toString();
     }
 
-    public RoomObject remove(String objectName) {
+    public TakableItem remove(String objectName) {
         final RoomObject roomObject = getFromString(objectName);
-        roomObjects.remove(roomObject) ;
-        return roomObject;
+        if (!(roomObject instanceof TakableItem)) {
+            throw new IllegalArgumentException("Item cannot be removed.");
+        }
+
+        final TakableItem takableItem = (TakableItem) getFromString(objectName);
+        items.remove(takableItem) ;
+        return takableItem;
     }
 
+    /*
+        Remove an object from the set - may need to do this for a non-takable item if it is destroyed
+    */
     public void remove(RoomObject roomObject) {
-        roomObjects.remove(roomObject) ;
+        items.remove(roomObject) ;
     }
 
 
     public void add(RoomObject roomObject) {
-        roomObjects.add(roomObject);
+        items.add(roomObject);
     }
 
 
@@ -63,6 +71,10 @@ public class RoomObjectsSet {
 
 
     public boolean contains(RoomObject roomObject) {
-        return roomObjects.contains(roomObject);
+        return items.contains(roomObject);
+    }
+
+    public int size() {
+        return items.size();
     }
 }
