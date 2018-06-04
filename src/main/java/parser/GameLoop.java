@@ -25,6 +25,7 @@ public class GameLoop {
     }
 
 
+    /* NO LONGER UPDATED */
     public static void main(String[] args) {
         StartingTheGame.init();
 
@@ -40,8 +41,8 @@ public class GameLoop {
                     break outer;
                 case "help":
                 case "h":
-                    System.out.println("Commands: \n"
-                                               + "No arguments: n/s/e/w/location/inventory/quit\n"
+                    System.out.println("Basic Commands: \n"
+                                               + "No arguments: n/s/e/w/location/inventory/hint/quit\n"
                                                + "Arguments: examine/take/drop");
                     break;
                 case "hint":
@@ -49,7 +50,6 @@ public class GameLoop {
                         System.out.println(conditionalTriggers.get(0).hint());
                     }
                     else {
-                        // TODO
                         System.out.println("I got nothin' (I haven't written a hint for her yet, yell at me)");
                     }
                     break;
@@ -60,7 +60,7 @@ public class GameLoop {
         }
     }
 
-
+    /* NO LONGER UPDATED */
     private static String readStringFromCmd() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String string;
@@ -72,6 +72,17 @@ public class GameLoop {
             System.err.println("Fatal input error");
         }
         return string;
+    }
+
+
+    public static String getHint() {
+        if (conditionalTriggers.size() > 0) {
+            return conditionalTriggers.get(0).hint();
+        }
+        else {
+            // TODO
+            return "I got nothin' (I haven't written a hint for her yet, yell at me)";
+        }
     }
 
 
