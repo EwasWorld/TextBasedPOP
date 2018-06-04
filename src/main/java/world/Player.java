@@ -1,5 +1,9 @@
 package world;
 
+import jdk.nashorn.internal.runtime.ParserException;
+
+
+
 public class Player {
     public enum PlayerClass {WIZARD}
 
@@ -28,6 +32,16 @@ public class Player {
     public static String move(Direction direction) {
         playerLocation = playerLocation.move(direction);
         return playerLocation.getRoomText();
+    }
+
+
+    public static String move(String directionString) {
+        try {
+            return move(Direction.valueOf(directionString.toUpperCase()));
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("That's not a direction I know.");
+        }
     }
 
 

@@ -85,34 +85,34 @@ public class StartingTheGame {
         final String dropText = "That's a bad idea but hell, what do I know?";
         final String takeText = "You pick up the page.";
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Talos", new String[]{"Talos", "Paper", "Page"}, touchText, takeText,
+                new TakableItem("Prayer to Talos", new String[]{"Talos", "Paper", "Page", "Talos page"}, touchText, takeText,
                                 dropText,
                                 "'Wind wave' is written at the top of the page in ancient runes. Below is a calling "
                                         + "to Talos, god of storms, asking for his breath.",
                                 false
                 ));
-        bedroom.addRoomObject(new TakableItem("Prayer to Helm", new String[]{"Helm"}, touchText, takeText, dropText,
+        bedroom.addRoomObject(new TakableItem("Prayer to Helm", new String[]{"Helm", "helm page"}, touchText, takeText, dropText,
                                               "A calling to Helm, god of protection, asking for his protection.", false
         ));
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Ralishaz", new String[]{"Ralishaz"}, touchText, takeText, dropText,
+                new TakableItem("Prayer to Ralishaz", new String[]{"Ralishaz", "ralishaz page"}, touchText, takeText, dropText,
                                 "A calling to Ralishaz, god of ill luck and insanity, asking for his fortune to shine "
                                         + "upon those around you.",
                                 false
                 ));
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Belenus", new String[]{"Belenus"}, touchText, takeText, dropText,
+                new TakableItem("Prayer to Belenus", new String[]{"Belenus", "belenus page"}, touchText, takeText, dropText,
                                 "A calling to Belenus, god of sun, light, and warmth, asking for his "
                                         + "radiance in this dark place.",
                                 false
                 ));
-        bedroom.addRoomObject(new TakableItem("Prayer to Bast", new String[]{"Bast"}, touchText, takeText, dropText,
+        bedroom.addRoomObject(new TakableItem("Prayer to Bast", new String[]{"Bast", "bast page"}, touchText, takeText, dropText,
                                               "A calling to Bast, goddess of cats and vengeance, asking for her "
                                                       + "strength in the task you have before you.",
                                               false
         ));
         bedroom.addRoomObject(
-                new TakableItem("Prayer to Balinor", new String[]{"Balinor"}, touchText, takeText, dropText,
+                new TakableItem("Prayer to Balinor", new String[]{"Balinor", "balinor page"}, touchText, takeText, dropText,
                                 "A calling to Balinor, god of beasts and the hunt, asking for a friend.",
                                 false
                 ));
@@ -123,7 +123,7 @@ public class StartingTheGame {
                 false
         );
         bedroom.addRoomObject(fire);
-        bedroom.addRoomObject(new RoomObject("Bookshelf", new String[]{},
+        bedroom.addRoomObject(new RoomObject("Bookshelf", new String[]{"Bookcase"},
                                              "You get some dust on your fingers. Maybe you should do a little spring "
                                                      + "cleaning.",
                                              "On this old set of shelves are all the possessions you have: two "

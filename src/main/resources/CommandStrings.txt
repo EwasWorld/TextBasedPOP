@@ -7,7 +7,7 @@ INVENTORY,false,i
 LOCATION,false,l;look
 EXAMINE,true,x;look at;read
 TOUCH,true,caress
-TAKE,true,take;grab;pick up
+TAKE,true,take;grab;pick up;get
 DROP,true
 YELL,false
 SAY,true

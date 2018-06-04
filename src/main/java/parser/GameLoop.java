@@ -39,6 +39,7 @@ public class GameLoop {
                     System.out.println("Byee");
                     break outer;
                 case "help":
+                case "h":
                     System.out.println("Commands: \n"
                                                + "No arguments: n/s/e/w/location/inventory/quit\n"
                                                + "Arguments: examine/take/drop");
@@ -76,7 +77,8 @@ public class GameLoop {
         try {
             final ParsedCommand parsedCommand = commandBTree.find(line.toLowerCase());
             // Check if other actions are blocked, if so check whether the given action was ok
-            if (conditionalTriggers.size() == 0 || !(conditionalTriggers.get(0) instanceof BlockingTrigger)
+            if (parsedCommand.getCommand() == Command.LOCATION || conditionalTriggers.size() == 0
+                    || !(conditionalTriggers.get(0) instanceof BlockingTrigger)
                     || (((BlockingTrigger) conditionalTriggers.get(0)).acceptableAction(parsedCommand)))
             {
                 outline = executeMap.get(parsedCommand.getCommand()).execute(parsedCommand.getArguments());
@@ -109,7 +111,7 @@ public class GameLoop {
     private static Map<Command, CommandAction> generateExecuteMap() {
         final Map<Command, CommandAction> executeMap = new HashMap<>();
 
-        executeMap.put(Command.MOVE, (args -> Player.move(Direction.valueOf(args.toUpperCase()))));
+        executeMap.put(Command.MOVE, (Player::move));
         executeMap.put(Command.NORTH, (args -> Player.move(Direction.NORTH)));
         executeMap.put(Command.SOUTH, (args -> Player.move(Direction.SOUTH)));
         executeMap.put(Command.EAST, (args -> Player.move(Direction.EAST)));
