@@ -46,6 +46,11 @@ public class RoomObject {
     }
 
 
+    public void setExamineText(String examineText) {
+        this.examineText = examineText;
+    }
+
+
     public String getTouchText() {
         return touchText;
     }

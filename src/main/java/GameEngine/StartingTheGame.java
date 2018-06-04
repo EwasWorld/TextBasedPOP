@@ -5,40 +5,45 @@ import parser.GameLoop;
 import parser.ParsedCommand;
 import world.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 
 public class StartingTheGame {
     public static void init() {
-        Room room = new Room(
+        final Room room = new Room(
                 "Haze", true,
                 "The world is swirling. A vague orb of blue bobs in the air in front of you, close enough to touch. "
                         + "Flashes of colour dart across its surface like meteors through the sky, each appearing for"
                         + " only a few seconds.",
                 ""
         );
-        TakableItem orb = new TakableItem(
-                "orb", new String[]{}, "As your fingers touch its surface you a feel scorching pain.",
+        // TODO: remove alternate name when other orbs are added
+        room.addRoomObject(new TakableItem(
+                "Blue orb", new String[]{"orb"}, "As your fingers touch its surface you a feel scorching pain.",
                 "As your fingers touch its surface you a feel scorching pain.", "",
                 "Your imagination is filled with thoughts of what you might do with its power. It "
                         + "seems like you'd be able to do anything you could fathom if only you had it in your grasp.",
                 true
-        );
-        room.addRoomObject(orb);
+        ));
         System.out.println(Player.setPlayerLocation(room));
 
         // Orb chooser and warp player to bedroom
         GameLoop.addTrigger(new GameLoop.ConditionalTrigger() {
             @Override
             public boolean condition() {
-                return !Player.getPlayerLocation().contains(orb);
+                return !Player.getPlayerLocation().contains("orb");
             }
 
 
             @Override
             public void action() {
-                Player.setPlayerClass(Player.PlayerClass.WIZARD);
+                final Player.PlayerClass playerClass = Player.PlayerClass.WIZARD;
+                Player.setPlayerClass(playerClass);
                 // Set up the bedroom based upon their class
-                createWizardBedroomTriggers();
+                final Room bedroom = createWizardBedroom();
 
                 GameLoop.addTrigger(() -> System.out.println(
                         "The orb starts to slowly suck your hand in. Your arm up to your elbow is now stuck inside. "
@@ -50,104 +55,24 @@ public class StartingTheGame {
                                                + " and become aware of yourself lying on the floor.");
 
                     // Set up the next room based on their class
-                    System.out.println(Player.setPlayerLocation(createAllRoomsAndObjects()));
+                    System.out.println(Player.setPlayerLocation(createOtherRoomsAndObjects(bedroom)));
                 });
             }
         });
     }
 
 
-    private static void createWizardBedroomTriggers() {
-        // First page taken
-        GameLoop.addTrigger(new GameLoop.BlockingTrigger() {
-            @Override
-            public boolean acceptableAction(ParsedCommand parsedCommand) {
-                return parsedCommand.getCommand() == Command.TAKE || parsedCommand.getCommand() == Command.EXAMINE;
-            }
-
-
-            @Override
-            public String blockingText() {
-                return "You probably want to do something about the burning pages first, they look important.";
-            }
-
-
-            @Override
-            public boolean condition() {
-                final Room room = Player.getPlayerLocation();
-
-                // Check that the player took the original page
-                if (room.contains("Talos")) {
-                    return room.roomObjectsSize() == 6;
-                }
-                else {
-                    return room.roomObjectsSize() == 5;
-                }
-            }
-
-
-            @Override
-            public void action() {
-                // TODO: alter fire examine text
-                System.out.println(
-                        "The ashes of the pages that were in the centre of the fire begin to crumble as the outer "
-                                + "pages begin to blacken.");
-            }
-        });
-
-        // Second page taken
-        GameLoop.addTrigger(new GameLoop.BlockingTrigger() {
-            @Override
-            public boolean acceptableAction(ParsedCommand parsedCommand) {
-                return parsedCommand.getCommand() == Command.TAKE || parsedCommand.getCommand() == Command.EXAMINE;
-            }
-
-
-            @Override
-            public String blockingText() {
-                return "You probably want to do something about the burning pages first, they look important.";
-            }
-
-
-            @Override
-            public boolean condition() {
-                final Room room = Player.getPlayerLocation();
-
-                // Check that the player took the original page
-                if (room.contains("Talos")) {
-                    return room.roomObjectsSize() == 5;
-                }
-                else {
-                    return room.roomObjectsSize() == 4;
-                }
-            }
-
-
-            @Override
-            public void action() {
-                // TODO: alter fire examine text
-                System.out.println(
-                        "As you grab the barely legible page and gently pat out the flames at its corner, the "
-                                + "remaining pages become completely blackened and are engulfed by the flames.");
-                Player.getPlayerLocation().setExitsLocked(false);
-            }
-        });
-    }
-
-
-    private static Room createAllRoomsAndObjects() {
+    private static Room createWizardBedroom() {
         final Room bedroom = new Room(
                 "Bedroom", true,
-                "A small bedroom no more than three meters square. Behind you is a "
-                        + "bed with the thin, worn blanket rustled from a restless night. At its foot is "
-                        + "a bookcase with a few clothes and two books you haven't read in years. To your"
-                        + " left is a door slightly ajar, through it you can hear a lively conversation. "
-                        + "In front of you in one corner is a fireplace with a small fire burning within "
-                        + "it. Next to the fire a small wooden stool sits on its side, lying just shy of "
-                        + "the flame's reach. Within the fire is an old book, so old that the pages have "
-                        + "all fallen out and are scattered amongst the flames. One page managed to avoid"
-                        + " the flame entirely and drifts towards your face, landing gently in front of "
-                        + "you.",
+                "A small bedroom no more than three meters square. Behind you is a bed with the thin, worn blanket "
+                        + "rustled from a restless night. At its foot is a bookcase with a few clothes and two books "
+                        + "you haven't read in years. To your left is a door slightly ajar, through it you can hear a"
+                        + " lively conversation. In front of you in one corner is a fireplace with a small fire "
+                        + "burning within it. Next to the fire a small wooden stool sits on its side, lying just shy "
+                        + "of the flame's reach. Within the fire is an old book, so old that the pages have all "
+                        + "fallen out and are scattered amongst the flames. One page managed to avoid the flame "
+                        + "entirely and drifts towards your face, landing gently in front of you.",
                 ""
         );
 
@@ -193,16 +118,145 @@ public class StartingTheGame {
         * Bookshelf
         * Anything on the bookshelf
         * Remember to increase triggers triggers above when adding these */
-        bedroom.addRoomObject(new RoomObject(
-                "Fire", new String[]{"Pages"}, "It's hot, your finger stings.", "The pages that"
-                + " fell in the centre are already blackening in the flame's embrace, but the five pages that fell "
-                + "towards the edges are taking slower. At a glance you see that the pages in the flames are devoted "
-                + "to Helm, god of protection, Ralishaz, god of ill luck and insanity, Belenus, god of sun, light, "
-                + "and warmth, Bast, goddess of cats and vengeance, and Balinor, god of beasts and the hunt. You "
-                + "reckon you could save two pages if you're quick.",
+        final RoomObject fire = new RoomObject(
+                "Fire", new String[]{"Pages"}, "It's hot, your finger stings.", generateFireExamineText(bedroom),
                 false
-        ));
+        );
+        bedroom.addRoomObject(fire);
 
+
+        // First page taken
+        GameLoop.addTrigger(new GameLoop.BlockingTrigger() {
+            @Override
+            public boolean acceptableAction(ParsedCommand parsedCommand) {
+                return parsedCommand.getCommand() == Command.TAKE || parsedCommand.getCommand() == Command.EXAMINE;
+            }
+
+
+            @Override
+            public String blockingText() {
+                return "You probably want to do something about the burning pages first, they look important.";
+            }
+
+
+            @Override
+            public boolean condition() {
+                final Room room = Player.getPlayerLocation();
+
+                // Check that the player took the original page
+                if (room.contains("Talos")) {
+                    return room.roomObjectsSize() == 6;
+                }
+                else {
+                    return room.roomObjectsSize() == 5;
+                }
+            }
+
+
+            @Override
+            public void action() {
+                fire.setExamineText(generateFireExamineText(bedroom));
+                System.out.println(
+                        "The ashes of the pages that were in the centre of the fire begin to crumble as the outer "
+                                + "pages begin to blacken.");
+            }
+        });
+
+        // Second page taken
+        GameLoop.addTrigger(new GameLoop.BlockingTrigger() {
+            @Override
+            public boolean acceptableAction(ParsedCommand parsedCommand) {
+                return parsedCommand.getCommand() == Command.TAKE || parsedCommand.getCommand() == Command.EXAMINE;
+            }
+
+
+            @Override
+            public String blockingText() {
+                return "You probably want to do something about the burning pages first, they look important.";
+            }
+
+
+            @Override
+            public boolean condition() {
+                final Room room = Player.getPlayerLocation();
+
+                // Check that the player took the original page
+                if (room.contains("Talos")) {
+                    return room.roomObjectsSize() == 5;
+                }
+                else {
+                    return room.roomObjectsSize() == 4;
+                }
+            }
+
+
+            @Override
+            public void action() {
+                fire.setExamineText(generateFireExamineText(bedroom));
+                System.out.println(
+                        "As you grab the barely legible page and gently pat out the flames at its corner, the "
+                                + "remaining pages become completely blackened and are engulfed by the flames.");
+
+                // Delete all remaining pages
+                for (String page : Arrays.asList("Helm", "Ralishaz", "Belenus", "Bast", "Balinor")) {
+                    try {
+                        bedroom.removeRoomObject(page);
+                    } catch (IllegalArgumentException ignore) {
+                    }
+                }
+
+                Player.getPlayerLocation().setExitsLocked(false);
+            }
+        });
+
+        return bedroom;
+    }
+
+
+    private static String generateFireExamineText(Room bedroom) {
+        final List<String> godsOld = Arrays.asList(
+                "Helm, god of protection", "Ralishaz, god of ill luck and insanity",
+                "Belenus, god of sun, light, and warmth", "Bast, goddess of cats and vengeance",
+                "Balinor, god of beasts and the hunt"
+        );
+        final List<String> gods = new ArrayList<>();
+        for (String god : godsOld) {
+            if (bedroom.contains(god.split(",")[0])) {
+                gods.add(god);
+            }
+        }
+
+        final StringBuilder godsString = new StringBuilder();
+        for (int i = 0; i < gods.size(); i++) {
+            if (i != gods.size() - 1) {
+                godsString.append(gods.get(i));
+                godsString.append(", ");
+            }
+            else {
+                godsString.append("and ");
+                godsString.append(gods.get(i));
+            }
+        }
+
+        if (gods.size() == 5) {
+            return "The pages that fell in the centre are already blackening in the flame's embrace, but the five "
+                    + "pages "
+                    + "that fell towards the edges are taking slower. At a glance you see that the pages within reach"
+                    + " are devoted to "
+                    + godsString.toString() + ". You reckon you can save two pages if you're quick.";
+        }
+        else if (gods.size() == 4) {
+            return "The pages that fell in the centre are burnt beyond all hope, but the four pages that fell towards"
+                    + " the edges are still savable. At a glance you see that the pages within reach are devoted to "
+                    + godsString.toString() + ". You reckon you can save one more page if you're quick.";
+        }
+        else {
+            return "The fire dies down, all the pages gone.";
+        }
+    }
+
+
+    private static Room createOtherRoomsAndObjects(Room bedroom) {
         // Other rooms
         final Room livingRoom = new Room(
                 "Living Room", "You find yourself in a larger living room with two small couches "
