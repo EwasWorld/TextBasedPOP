@@ -6,7 +6,6 @@ import java.util.*;
 
 
 
-// TODO: Public for low-level testing
 public class CommandBTreeNode {
     private CommandBTreeNode left = null;
     private CommandBTreeNode right = null;
@@ -52,9 +51,9 @@ public class CommandBTreeNode {
 
     /*
         Creates a balanced binary search tree for all commands listed in the array
+        - Used for testing -
      */
-    // TEST METHOD
-    public CommandBTreeNode(ValidCommand[] allCommands) {
+    private CommandBTreeNode(ValidCommand[] allCommands) {
         if (allCommands.length == 0) {
             throw new IllegalArgumentException("Array must contain at least one item");
         }
@@ -91,9 +90,9 @@ public class CommandBTreeNode {
 
     /*
         Total nodes in the tree
+        - Used for testing -
      */
-    // TODO: Public for low-level testing
-    public int size() {
+    private int size() {
         int total = 1;
         if (left != null) {
             total += left.size();
@@ -110,8 +109,7 @@ public class CommandBTreeNode {
         Finds a match for the command at the beginning of the line
         Checks that an argument is given or omitted as needed
      */
-    // TODO: Public for low-level testing
-    public ParsedCommand find(String line) {
+    ParsedCommand find(String line) {
         final String commandString = data.getCommandString();
         int comparison;
 
