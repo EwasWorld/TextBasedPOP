@@ -11,72 +11,95 @@ import java.util.Map;
 
 
 
-public class GameLoop {
+/*
+   Bridge between gui and back end used to parse and execute lines
+ */
+public class Executioner {
     private static final CommandBTreeNode commandBTree = new CommandBTreeNode();
-    private static Map<Command, CommandAction> executeMap = generateExecuteMap();
     private static List<Trigger> autoTriggers = new ArrayList<>();
     private static List<ConditionalTrigger> conditionalTriggers = new ArrayList<>();
+    private static Map<Command, CommandAction> executeMap = generateExecuteMap();
 
 
-    private GameLoop() {
-    }
-
-
-    public static String getHint() {
-        if (conditionalTriggers.size() > 0) {
-            return conditionalTriggers.get(0).hint();
-        }
-        else {
-            // TODO
-            return "I got nothin' (I haven't written a hint for her yet, yell at me)";
-        }
+    private Executioner() {
     }
 
 
     public static void executeLine(String line) {
-        // Command doesn't matter, event will auto-trigger
-        if (autoTriggers.size() > 0) {
+        String outline = "";
+        ParsedCommand parsedCommand = null;
+        try {
+            parsedCommand = commandBTree.find(line.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            outline = e.getMessage();
+        }
+
+        // Command doesn't matter (can even be faulty, as long as it's not set to always work), event will auto-trigger
+        if (autoTriggers.size() > 0 && (parsedCommand == null || !parsedCommand.getCommand().isAlwaysWorks())) {
             autoTriggers.remove(0).action();
             return;
         }
+        if (parsedCommand == null) {
+            MyPanel.appendLineToTextArea(outline);
+            return;
+        }
 
-        String outline;
-        try {
-            final ParsedCommand parsedCommand = commandBTree.find(line.toLowerCase());
-            // Check if other actions are blocked, if so check whether the given action was ok
-            if (parsedCommand.getCommand() == Command.LOCATION || conditionalTriggers.size() == 0
-                    || !(conditionalTriggers.get(0) instanceof BlockingTrigger)
-                    || (((BlockingTrigger) conditionalTriggers.get(0)).acceptableAction(parsedCommand)))
-            {
+        if (parsedCommand.getCommand().isAlwaysWorks() || isBlockingTriggerAction(parsedCommand)) {
+            try {
                 outline = executeMap.get(parsedCommand.getCommand()).execute(parsedCommand.getArguments());
+            } catch (IllegalArgumentException e) {
+                outline = e.getMessage();
+            }
 
-                if (conditionalTriggers.size() > 0 && (conditionalTriggers.get(0) instanceof BlockingTrigger)
-                        && (conditionalTriggers.get(0).condition()))
-                {
-                    // Doesn't print the outline
-                    conditionalTriggers.get(0).action();
-                    conditionalTriggers.remove(0);
-                    return;
-                }
+            if (isBlockingTriggerSatisfied()) {
+                conditionalTriggers.remove(0).action();
+                return; // Doesn't print the outline
             }
-            else {
-                MyPanel.appendLineToTextArea(((BlockingTrigger) conditionalTriggers.get(0)).blockingText());
-                return;
-            }
-        } catch (IllegalArgumentException e) {
-            outline = e.getMessage();
+        }
+        else {
+            MyPanel.appendLineToTextArea(((BlockingTrigger) conditionalTriggers.get(0)).blockingText());
+            return;
         }
         MyPanel.appendLineToTextArea(outline);
 
         if (conditionalTriggers.size() > 0 && conditionalTriggers.get(0).condition()) {
-            conditionalTriggers.get(0).action();
-            conditionalTriggers.remove(conditionalTriggers.get(0));
+            conditionalTriggers.remove(0).action();
         }
+    }
+
+
+    /*
+       Check whether commands are blocked, if they are, check if the given action is ok
+     */
+    private static boolean isBlockingTriggerAction(ParsedCommand parsedCommand) {
+        return conditionalTriggers.size() == 0 || !(conditionalTriggers.get(0) instanceof BlockingTrigger)
+                || (((BlockingTrigger) conditionalTriggers.get(0)).acceptableAction(parsedCommand));
+    }
+
+
+    private static boolean isBlockingTriggerSatisfied() {
+        return conditionalTriggers.size() > 0 && (conditionalTriggers.get(0) instanceof BlockingTrigger)
+                && (conditionalTriggers.get(0).condition());
     }
 
 
     private static Map<Command, CommandAction> generateExecuteMap() {
         final Map<Command, CommandAction> executeMap = new HashMap<>();
+
+        executeMap.put(Command.QUIT, (args -> {
+            MyPanel.quit();
+            return null;
+        }));
+        executeMap.put(
+                Command.HELP,
+                (args -> "~ Basic Commands: \nNo arguments: n/s/e/w/location/inventory/hint/quit\nArguments: "
+                        + "examine/take/drop")
+        );
+        executeMap.put(Command.HINT, (args -> getHint()));
+        executeMap.put(Command.CLS, (args -> {
+            MyPanel.clearScreen();
+            return null;
+        }));
 
         executeMap.put(Command.MOVE, (Player::move));
         executeMap.put(Command.NORTH, (args -> Player.move(Direction.NORTH)));
@@ -99,6 +122,17 @@ public class GameLoop {
         executeMap.put(Command.CAST, (args -> ));
         */
         return executeMap;
+    }
+
+
+    private static String getHint() {
+        if (conditionalTriggers.size() > 0 && autoTriggers.size() == 0) {
+            return conditionalTriggers.get(0).hint();
+        }
+        else {
+            // TODO
+            return "I got nothin' (I haven't written a hint for here yet, yell at me)";
+        }
     }
 
 

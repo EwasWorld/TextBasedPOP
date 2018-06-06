@@ -1,11 +1,8 @@
 package parser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 
 
@@ -19,19 +16,11 @@ public class CommandBTreeNode {
         Creates a balanced binary search tree for all commands listed in CommandStrings.txt
      */
     public CommandBTreeNode() {
-        final Scanner scanner;
-        try {
-            scanner = new Scanner(new File("src/main/resources/CommandStrings.txt"));
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException("Fatal error: cannot generate commands list");
-        }
-
         final List<ValidCommand> allCommands = new ArrayList<>();
-        while (scanner.hasNext()) {
-            final String line = scanner.nextLine();
-            final String[] splitLine = line.split(",");
+        for (String commandString : Command.getCommandArray()) {
+            final String[] splitLine = commandString.split(",");
             if (!(splitLine.length == 2 || splitLine.length == 3)) {
-                throw new IllegalStateException("Fatal error: badly formatted command input '" + line + "'");
+                throw new IllegalStateException("Fatal error: badly formatted command input '" + commandString + "'");
             }
 
             final Command command = Command.valueOf(splitLine[0].toUpperCase());
@@ -47,7 +36,7 @@ public class CommandBTreeNode {
         if (allCommands.size() == 0) {
             throw new IllegalStateException("Fatal error: no commands loaded");
         }
-        init(allCommands.toArray(new ValidCommand[allCommands.size()]));
+        init(allCommands.toArray(new ValidCommand[0]));
     }
 
 

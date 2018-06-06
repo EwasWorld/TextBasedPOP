@@ -2,7 +2,7 @@ package GameEngine;
 
 import applet.MyPanel;
 import parser.Command;
-import parser.GameLoop;
+import parser.Executioner;
 import parser.ParsedCommand;
 import world.*;
 
@@ -32,7 +32,7 @@ public class StartingTheGame {
         MyPanel.appendLineToTextArea(Player.setPlayerLocation(room));
 
         // Orb chooser and warp player to bedroom
-        GameLoop.addTrigger(new GameLoop.ConditionalTrigger() {
+        Executioner.addTrigger(new Executioner.ConditionalTrigger() {
             @Override
             public boolean condition() {
                 return !Player.getPlayerLocation().contains("orb");
@@ -50,10 +50,10 @@ public class StartingTheGame {
                     Player.removeObject("blue orb");
                 }
 
-                GameLoop.addTrigger(() -> MyPanel.appendLineToTextArea(
+                Executioner.addTrigger(() -> MyPanel.appendLineToTextArea(
                         "The orb starts to slowly suck your hand in. Your arm up to your elbow is now stuck inside. "
                                 + "The sensation changed to a bitter cold and your fingers begin numb."));
-                GameLoop.addTrigger(() -> {
+                Executioner.addTrigger(() -> {
                     MyPanel.appendLineToTextArea(
                             "You continue to be swallowed by the orb. Just before your face breaches its "
                                     + "surface you hear a clattering. The harsh cold disappears in an "
@@ -194,7 +194,7 @@ public class StartingTheGame {
 
 
         // First page taken
-        GameLoop.addTrigger(new GameLoop.BlockingTrigger() {
+        Executioner.addTrigger(new Executioner.BlockingTrigger() {
             @Override
             public boolean acceptableAction(ParsedCommand parsedCommand) {
                 return parsedCommand.getCommand() == Command.TAKE || (parsedCommand.getCommand() == Command.EXAMINE
@@ -238,7 +238,7 @@ public class StartingTheGame {
         });
 
         // Second page taken
-        GameLoop.addTrigger(new GameLoop.BlockingTrigger() {
+        Executioner.addTrigger(new Executioner.BlockingTrigger() {
             @Override
             public boolean acceptableAction(ParsedCommand parsedCommand) {
                 return parsedCommand.getCommand() == Command.TAKE || parsedCommand.getCommand() == Command.EXAMINE;
