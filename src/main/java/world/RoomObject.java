@@ -26,12 +26,23 @@ public class RoomObject {
     }
 
 
-    public String getName() {
+    public RoomObject(String name, String touchText, String examineText,
+                      boolean breakIfTouched)
+    {
+        this.name = name;
+        this.alternateNames = new HashSet<>();
+        this.touchText = touchText;
+        this.examineText = examineText;
+        this.breakIfTouched = breakIfTouched;
+    }
+
+
+    String getName() {
         return name;
     }
 
 
-    public Set<String> getAllNames() {
+    Set<String> getAllNames() {
         final Set<String> returnSet = new HashSet<>();
         if (alternateNames != null) {
             returnSet.addAll(alternateNames);
@@ -41,8 +52,8 @@ public class RoomObject {
     }
 
 
-    public String getExamineText() {
-        return examineText;
+    String getExamineText() {
+        return name + " - " + examineText;
     }
 
 
@@ -51,12 +62,12 @@ public class RoomObject {
     }
 
 
-    public String getTouchText() {
+    String getTouchText() {
         return touchText;
     }
 
 
-    public boolean isBreakIfTouched() {
+    boolean isBreakIfTouched() {
         return breakIfTouched;
     }
 

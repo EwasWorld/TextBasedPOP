@@ -13,6 +13,9 @@ import java.util.List;
 
 
 public class StartingTheGame {
+    private static int bedroomObjectsCount;
+
+
     public static void init() {
         final Room room = new Room(
                 "Haze", true,
@@ -23,7 +26,8 @@ public class StartingTheGame {
         );
         // TODO: remove alternate name when other orbs are added
         room.addRoomObject(new TakableItem(
-                "Blue orb", new String[]{"orb"}, "As your fingers touch its surface you a feel scorching pain.",
+                "Blue orb", new String[]{"orb"},
+                "As your fingers touch its surface you a feel scorching pain. The orb starts to slowly suck your hand in.",
                 "As your fingers touch its surface you a feel scorching pain.", "",
                 "Your imagination is filled with thoughts of what you might do with its power. It "
                         + "seems like you'd be able to do anything you could fathom if only you had it in your grasp.",
@@ -51,7 +55,7 @@ public class StartingTheGame {
                 }
 
                 Executioner.addTrigger(() -> MyPanel.appendLineToTextArea(
-                        "The orb starts to slowly suck your hand in. Your arm up to your elbow is now stuck inside. "
+                        "Your arm up to your elbow is now stuck inside. "
                                 + "The sensation changed to a bitter cold and your fingers begin numb."));
                 Executioner.addTrigger(() -> {
                     MyPanel.appendLineToTextArea(
@@ -79,13 +83,13 @@ public class StartingTheGame {
         final Room bedroom = new Room(
                 "Bedroom", true,
                 "A small bedroom no more than three meters square. Behind you is a bed with the thin, worn blanket "
-                        + "rustled from a restless night. At its foot is a bookcase with a few clothes and two books "
-                        + "you haven't read in years. To your left is a door slightly ajar, through it you can hear a"
-                        + " lively conversation. In front of you in one corner is a fireplace with a small fire "
-                        + "burning within it. Next to the fire a small wooden stool sits on its side, lying just shy "
-                        + "of the flame's reach. Within the fire is an old book, so old that the pages have all "
-                        + "fallen out and are scattered amongst the flames. One page managed to avoid the flame "
-                        + "entirely and drifts towards your face, landing gently in front of you.",
+                        + "rustled from a restless night. At its foot is a bookcase with your few possessions. To "
+                        + "your left is a door slightly ajar, through it you can hear a lively conversation. In front"
+                        + " of you in one corner is a fireplace with a small fire burning within it. Next to the fire"
+                        + " a small wooden stool sits on its side, lying just shy of the flame's reach. Within the "
+                        + "fire is an old book, so old that the pages have all fallen out and are scattered amongst "
+                        + "the flames. One page managed to avoid the flame entirely and drifts towards your face, "
+                        + "landing gently in front of you.",
                 "A small bedroom with a bed, bookcase, stool and fire."
         );
 
@@ -148,13 +152,26 @@ public class StartingTheGame {
                                                      + "but your forgot.",
                                              false
         ));
-        bedroom.addRoomObject(new RoomObject("Bed", new String[]{},
-                                             "It screams... just kidding it's a bed, and not a very soft one at that.",
-                                             "Rustled from a poor night's sleep. You're sure you had a pillow but it "
-                                                     + "seems to have gone missing since you went to bed last night",
-                                             false
+        bedroom.addRoomObject(new RoomObject(
+                "Bed",
+                "It screams... just kidding it's a bed, and not a very soft one at that.",
+                "Rustled from a poor night's sleep. You're sure you had a pillow but it "
+                        + "seems to have gone missing since you went to bed last night",
+                false
         ));
-        bedroom.addRoomObject(new TakableItem("Robes, lifted", new String[]{"Robes lifted", "adult book"},
+        bedroom.addRoomObject(new RoomObject("Stool", "Not much happens.",
+                                             "Wooden, three legs, and a flat bit to sit on.", false
+        ));
+        bedroom.addRoomObject(
+                new RoomObject("Door", "It doesn't move. A truly well-built door.", "Boring, wooden",
+                               false
+                ));
+
+        // Objects in room
+        bedroom.addRoomObject(new TakableItem(
+                "Robes, lifted",
+                new String[]{"Robes lifted", "adult book", "Adult natured book",
+                        "book of adult nature"},
                                               "As you caress it you're reminded of the glorious sights within. You've"
                                                       + " read it so many times that it's burned into your memory.",
                                               "Best keep it on you in case someone comes snooping around. You don't "
@@ -166,15 +183,17 @@ public class StartingTheGame {
                                                       + "famous writers for the Lewd Wizards magazine."
         ));
         bedroom.addRoomObject(
-                new TakableItem("Wizarding Runes for Dummies", new String[]{"Wizarding runes book", "Wizarding runes"},
-                                "You creased a page.",
-                                "It's good as reference. Not as good as the Encyclopedia Britannica, but it's much "
+                new TakableItem(
+                        "Wizarding Runes for Dummies",
+                        new String[]{"Wizarding runes book", "Wizarding runes", "Wizarding book"},
+                        "You creased a page.",
+                        "It's good as reference. Not as good as the Encyclopedia Britannica, but it's much "
                                         + "more portable and usually does the job.",
-                                "Hardbacks cost an arm and a leg.",
-                                "The very book that inspired you to become a wizard. You've memorised all its "
+                        "Hardbacks cost an arm and a leg.",
+                        "The very book that inspired you to become a wizard. You've memorised all its "
                                         + "knowledge, but can't seem to let it go."
                 ));
-        bedroom.addRoomObject(new TakableItem("Shirt", new String[]{"tshirt", "t-shirt", "top"},
+        bedroom.addRoomObject(new TakableItem("Shirt", new String[]{"tshirt", "t-shirt", "top", "t shirt"},
                                               "It's a shirt, you know what those feel like.",
                                               "I suppose it's useful in case you spill some food on this one.",
                                               "Oh, you paid good money for that...", "Just a plain white shirt."
@@ -187,10 +206,17 @@ public class StartingTheGame {
                                               ""
         ));
         bedroom.addRoomObject(
-                new TakableItem("Stale bread", new String[]{"bread"}, "It's as hard as a rock. Not very apetising.",
+                new TakableItem("Stale bread", new String[]{"bread"}, "It's as hard as a rock. Not very appetising.",
                                 "I suppose you can throw it at someone and kill them.", "Probably for the best.",
                                 "By your estimates, it's about a week beyond the eat-by date."
                 ));
+        bedroom.addRoomObject(
+                new TakableItem("Blanket", "It's not super soft", "It'll keep you warm later.",
+                                "Now it's dirty.",
+                                "A rough blanket that has never been washed - good thing it was brown from the start."
+                ));
+
+        bedroomObjectsCount = bedroom.roomObjectsSize();
 
 
         // First page taken
@@ -214,10 +240,10 @@ public class StartingTheGame {
 
                 // Check that the player took the original page
                 if (room.contains("Talos")) {
-                    return room.roomObjectsSize() == 13;
+                    return room.roomObjectsSize() == bedroomObjectsCount - 1;
                 }
                 else {
-                    return room.roomObjectsSize() == 12;
+                    return room.roomObjectsSize() == bedroomObjectsCount - 2;
                 }
             }
 
@@ -257,10 +283,10 @@ public class StartingTheGame {
 
                 // Check that the player took the original page
                 if (room.contains("Talos")) {
-                    return room.roomObjectsSize() == 12;
+                    return room.roomObjectsSize() == bedroomObjectsCount - 2;
                 }
                 else {
-                    return room.roomObjectsSize() == 11;
+                    return room.roomObjectsSize() == bedroomObjectsCount - 3;
                 }
             }
 

@@ -1,6 +1,8 @@
 package world;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -16,11 +18,18 @@ public class ItemsSet {
 
     public String toString() {
         StringBuilder sb = new StringBuilder("Inventory: ");
-        for (RoomObject roomObject : items) {
-            sb.append(roomObject.getName());
-            sb.append(", ");
+        if (items.size() > 0) {
+            final List<RoomObject> itemsList = new ArrayList<>(items);
+            itemsList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+            for (RoomObject roomObject : itemsList) {
+                sb.append(roomObject.getName());
+                sb.append(", ");
+            }
+            sb.delete(sb.lastIndexOf(","), sb.length());
         }
-        sb.delete(sb.lastIndexOf(","), sb.length());
+        else {
+            sb.append("Nothing, you have nothing. It's empty like your life.");
+        }
         return sb.toString();
     }
 

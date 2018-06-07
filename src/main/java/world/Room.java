@@ -43,7 +43,7 @@ public class Room {
     }
 
 
-    public Room move(Direction direction) {
+    Room move(Direction direction) {
         if (!exits.keySet().contains(direction)) {
             throw new IllegalArgumentException("There's no exit that way");
         }
@@ -55,7 +55,7 @@ public class Room {
     }
 
 
-    public String getRoomText() {
+    String getRoomText() {
         String returnString;
         if (!enteredBefore) {
             enteredBefore = true;
@@ -65,14 +65,14 @@ public class Room {
             returnString = name + "\n" + laterEntranceText;
         }
 
-        if (!exitsLocked) {
+        if (exits.size() > 0) {
             returnString += "\n" + getExitsString();
         }
         return returnString;
     }
 
 
-    public String getExitsString() {
+    String getExitsString() {
         if (exits.size() == 0) {
             return "";
         }
@@ -116,7 +116,7 @@ public class Room {
     }
 
 
-    public String touchRoomObject(String objectName) {
+    String touchRoomObject(String objectName) {
         RoomObject roomObject = getRoomObject(objectName);
         if (roomObject.isBreakIfTouched()) {
             roomObjects.remove(roomObject);
@@ -130,7 +130,7 @@ public class Room {
     }
 
 
-    public String examineRoomObject(String objectName) {
+    String examineRoomObject(String objectName) {
         return getRoomObject(objectName).getExamineText();
     }
 
